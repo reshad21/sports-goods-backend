@@ -6,7 +6,8 @@
   "author": "Mir Hussain",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "build": "tsc"
   },
   "dependencies": {
     "cors": "^2.8.5",
