@@ -23,30 +23,7 @@ const run = async () => {
     const db = client.db('sportinggoods');
     const productCollection = db.collection('products');
 
-    // app.get('/products', async (req, res) => {
-    //   const cursor = productCollection.find({});
-    //   const products = await cursor.toArray();
-    //   res.send({ status: true, data: products });
-    // });
-
-    // -----> our main code for get api
-    // app.get('/products', async (req, res) => {
-    //   let query = {};
-    //   if (req.query.category) {
-    //     query.category = req.query.category;
-    //   }
-    //   // Text search
-    //   if (req.query.searchTerm) {
-    //     query.$or = [
-    //       { title: { $regex: req.query.searchTerm, $options: 'i' } },
-    //       { description: { $regex: req.query.searchTerm, $options: 'i' } }
-    //     ];
-    //   }
-    //   const cursor = productCollection.find(query);
-    //   const products = await cursor.toArray();
-    //   res.send({ status: true, data: products });
-    // });
-
+    // --> single get --> filter --> search, all catch by this routes
     app.get('/products', async (req, res) => {
       let query = {};
 
@@ -62,35 +39,19 @@ const run = async () => {
       if (req.query.price) {
         query.price = parseFloat(req.query.price);
       }
-      
-
-      const cursor = productCollection.find(query);
-      const products = await cursor.toArray();
-      res.send({ status: true, data: products });
-    });
-
-
-
-    // ------>GET products by search term
-    app.get('/products', async (req, res) => {
-      const searchTerm = req.query.searchTerm;
-      console.log("backend search query=>",searchTerm);
-      if (typeof searchTerm !== 'string') {
-        res.status(400).send({ status: false, message: 'Invalid search term' });
-        return;
-      }
-
-      const query = {
-        $or: [
+      if (req.query.searchTerm) {
+        const searchTerm = req.query.searchTerm;
+        query.$or = [
           { title: { $regex: searchTerm, $options: 'i' } },
           { description: { $regex: searchTerm, $options: 'i' } }
-        ]
-      };
+        ];
+      }
 
       const cursor = productCollection.find(query);
       const products = await cursor.toArray();
       res.send({ status: true, data: products });
     });
+
 
     app.post('/product', async (req, res) => {
       const product = req.body;
