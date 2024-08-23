@@ -25,7 +25,6 @@ const run = async () => {
 
     // --> single get --> filter --> search, all catch by this routes
     app.get('/products', async (req, res) => {
-      console.log(req.body);
       let query = {};
 
       if (req.query.category) {
@@ -60,7 +59,6 @@ const run = async () => {
 
       const cursor = productCollection.find(query).sort(sortOption);
       const products = await cursor.toArray();
-      console.log(products);
       res.send({ status: true, data: products });
     });
 
